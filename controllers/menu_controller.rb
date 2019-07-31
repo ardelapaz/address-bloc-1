@@ -56,15 +56,46 @@ class MenuController
     puts "End of entries"
   end
 
+  def validate(type, data)
+    case type
+      when "name"
+        while !(data =~ /\A[a-zA-Z\s]*\z/)
+          puts "Invalid character detected, please try again with a valid name.\n"
+            puts "Make sure not to include any numbers or special characters!\n"
+            puts "Name: "
+            data = gets.chomp
+        end
+      when "phone"
+        while(!data =~ /^(\(?\+?[0-9]*\)?)?[0-9_\- \(\)]*$/)
+            puts "Check for any letters that might've snuck into your input by accident!\n"
+            puts "Phone number: "
+            data = gets.chomp
+        end
+      when "email"
+        while(!data =~ /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i)
+            puts "Make sure you didn't forget the '@' or the '.com'!\n"
+            puts "Email: "
+            data = gets.chomp
+      end
+    end
+    return data
+  end
+
   def create_entry
     system "clear"
     puts "New AddressBloc Entry"
+
     print "Name: "
     name = gets.chomp
+    name = validate("name", name)
+
     print "Phone number: "
     phone = gets.chomp
+    phone = validate("phone", phone)
+
     print "Email: "
     email = gets.chomp
+    email = validate("email", email)
 
     address_book.add_entry(name, phone, email)
 
@@ -75,9 +106,10 @@ class MenuController
   def search_entries
     print "Search by name: "
     name = gets.chomp
+    name = validate("name", name)
     match = Entry.find_by(:name, name)
     system "clear"
-    if match
+    if !match.empty?
       puts match.to_s
       search_submenu(match)
     else
@@ -138,10 +170,16 @@ class MenuController
   def edit_entry(entry)
     print "Updated name: "
     name = gets.chomp
+    name = validate("name", name)
+
     print "Updated phone number: "
     phone_number = gets.chomp
+    phone_number = validate("phone", phone_number)
+
     print "Updated email: "
     email = gets.chomp
+    email = validate("email", email)
+
     entry.name = name if !name.empty?
     entry.phone_number = phone_number if !phone_number.empty?
     entry.email = email if !email.empty?
