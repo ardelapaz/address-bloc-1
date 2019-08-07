@@ -25,3 +25,9 @@ puts "\n\nfind_in_batches\n"
 Entry.find_in_batches(0,3) do |contacts|
   contacts.each { |contact| puts "this is contact #{contact}" }
 end
+
+puts "\n\nthis is order \n"
+puts Entry.order(:name,  phone_number: :desc)
+
+puts "\n\nthis is join \n"
+puts Entry.join(comments: :guest)
