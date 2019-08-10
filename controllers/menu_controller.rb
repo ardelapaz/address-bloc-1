@@ -114,7 +114,7 @@ class MenuController
     name = validate("name", name)
     match = @address_book.find_entry(name)
     system "clear"
-    if !match.empty?
+    if !match.nil?
       puts match.to_s
       search_submenu(match)
     else
@@ -190,14 +190,13 @@ class MenuController
     print "Updated email: "
     email = gets.chomp
     email = validate("email", email)
+    updates[:email] = email unless email.empty?
 
     entry.name = name if !name.empty?
     entry.phone_number = phone_number if !phone_number.empty?
     entry.email = email if !email.empty?
-    updates[:email] = email unless email.empty?
 
     entry.update_attributes(updates)
-
 
     system "clear"
     puts "Updated entry:"
